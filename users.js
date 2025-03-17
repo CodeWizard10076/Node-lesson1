@@ -22,18 +22,39 @@ users = [
     new User(333, "user3", "horror", "no")
 ]
 
+const fs = require('fs')
+
 const print = () => {
-    for (let i = 0; i < users.length; i++) {
-        console.log(users[i].toString())
-    }
+    fs.readFile('users.json', 'utf8', (err, data) => {
+        if (err) {
+            console.log("The error is:", err);
+            return;
+        }
+        const userS = JSON.parse(data).map(user => new User(user.id, user.name, user.bookType, user.borrowed));
+        for (let i = 0; i < userS.length; i++) {
+            console.log(userS[i].toString())
+        }
+    })
 }
 
-const borrow = (id) => {
-    for (let i = 0; i < users.length; i++) {
-        if (users[i].id === id)
-            return (users[i])
+const borrow = async (id) => {
+    const data = await fs.promises.readFile('users.json', 'utf8');
+    const userS = JSON.parse(data);
+    for (let i = 0; i < userS.length; i++) {
+        if (userS[i].id === id)
+            return (userS[i])
     }
     throw new Error("no user found")
 }
 
-module.exports = { print, borrow }
+
+async function initUser() {
+    try {
+        const jsonData = JSON.stringify(users, null, 2);
+        await fs.promises.writeFile('users.json', jsonData, 'utf8');
+    } catch (err) {
+        console.log("The error is:", err);
+    }
+}
+
+module.exports = { print, borrow, initUser }

@@ -23,18 +23,39 @@ books = [
 ]
 
 
+const fs = require('fs')
+
 const print = () => {
-    for (let i = 0; i < books.length; i++) {
-        console.log(books[i].toString())
-    }
+    fs.readFile('books.json', 'utf8', (err, data) => {
+        if (err) {
+            console.log("The error is:", err);
+            return;
+        }
+        const bookS = JSON.parse(data).map(book => new Book(book.id, book.name, book.type, book.borrowed));
+        for (let i = 0; i < bookS.length; i++) {
+            console.log(bookS[i].toString())
+        }
+    })
 }
 
-const borrow = (id) => {
-    for (let i = 0; i < books.length; i++) {
-        if (books[i].id === id)
-            return (books[i])
+const borrow = async (id) => {
+    const data = await fs.promises.readFile('books.json', 'utf8');
+    const bookS = JSON.parse(data);
+    for (let i = 0; i < bookS.length; i++) {
+        if (bookS[i].id === id)
+            return (bookS[i])
     }
     throw new Error("no book found")
 }
 
-module.exports = { print, borrow }
+
+async function initbook() {
+    try {
+        const jsonData = JSON.stringify(books, null, 2);
+        await fs.promises.writeFile('books.json', jsonData, 'utf8');
+    } catch (err) {
+        console.log("The error is:", err);
+    }
+}
+
+module.exports = { print, borrow, initbook }

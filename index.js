@@ -2,8 +2,12 @@ const users = require('./users')
 const books = require('./books')
 users.print()
 books.print()
-let u1 = users.borrow(333)
-let b1 = books.borrow(333)
+//users.initUser()
+//books.initbook()
+const args = process.argv.slice(2)
+
+let u1 = users.borrow(parseInt(args[0]))
+let b1 = books.borrow(parseInt(args[1]))
 
 
 if (u1.bookType != b1.type)

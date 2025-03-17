@@ -1,0 +1,20 @@
+[
+  {
+    "id": 111,
+    "name": "user1",
+    "bookType": "drama",
+    "borrowed": "yes"
+  },
+  {
+    "id": 222,
+    "name": "user2",
+    "bookType": "action",
+    "borrowed": "yes"
+  },
+  {
+    "id": 333,
+    "name": "user3",
+    "bookType": "horror",
+    "borrowed": "no"
+  }
+]
